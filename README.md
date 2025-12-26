@@ -84,14 +84,16 @@ combined_M2 = M2₁ + M2₂ + δ² × n₁ × n₂ / (n₁ + n₂)
 │   ├── variance/          # オンライン分散（Welford、並列マージ対応）
 │   ├── histogram/         # オンラインヒストグラム
 │   ├── quantile/          # 四分位数・パーセンタイル推定（t-digest）
-│   └── ema/               # 指数移動平均
+│   ├── ema/               # 指数移動平均
+│   └── cms/               # Count-Min Sketch
 └── docs/
     ├── 01-online-mean.md
     ├── 02-online-variance.md
     ├── 03-online-histogram.md
     ├── 04-quantile-estimation.md
     ├── 05-merging-statistics.md
-    └── 06-ema.md
+    ├── 06-ema.md
+    └── 07-count-min-sketch.md
 ```
 
 ## 環境
