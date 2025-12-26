@@ -30,6 +30,10 @@ $$CMS = \begin{pmatrix} c_{1,1} & c_{1,2} & \cdots & c_{1,w} \\ c_{2,1} & c_{2,2
 
 $$\forall i \in [1, d]: \quad count[i][h_i(x)] \mathrel{+}= c$$
 
+> **記号の補足**: $\forall$ は「すべての〜について」を意味する全称記号です。
+> この式は「$i = 1$ から $d$ までの**すべての** $i$ について、`count[i][h_i(x)]` に `c` を加える」という意味です。
+> つまり、要素を追加するときは、$d$ 個すべてのハッシュ関数に対応するカウンタを更新します。
+
 ### クエリ（Query）
 
 要素 $x$ の頻度を推定：
@@ -172,6 +176,54 @@ func Merge(a, b *CountMinSketch) *CountMinSketch {
     }
     
     return result
+}
+```
+
+### マージ時の実装注意点
+
+> [!IMPORTANT]
+> **マージを想定する場合、すべてのノードで以下のパラメータを統一する必要があります：**
+> - **seed（シード）**: 必ず共通のものを使用
+> - **width（幅）**: 同じ値
+> - **depth（深さ）**: 同じ値
+
+#### なぜシードを共通にする必要があるのか？
+
+マージは「同じ位置のカウンタを足し合わせる」ことで動作します。シードが異なると、同じ要素が異なる位置にハッシュされ、マージ結果が無意味になります：
+
+```
+❌ シードが異なる場合:
+Node A (seed=123):  "apple" → 位置 5
+Node B (seed=456):  "apple" → 位置 12  ← 位置がずれる！
+
+✅ シードが共通の場合:
+Node A (seed=123):  "apple" → 位置 5
+Node B (seed=123):  "apple" → 位置 5   ← 同じ位置！
+```
+
+#### 推奨される実装パターン
+
+```go
+// グローバルまたは設定ファイルで共通のシードを定義
+var GlobalCMSConfig = struct {
+    Epsilon float64
+    Delta   float64
+    Seeds   []uint64
+}{
+    Epsilon: 0.01,
+    Delta:   0.01,
+    Seeds:   []uint64{12345, 67890, 11111, 22222, 33333},
+}
+
+// 各ノードで同じ設定を使用
+func NewWithConfig(config CMSConfig) *CountMinSketch {
+    cms := &CountMinSketch{
+        width: int(math.Ceil(math.E / config.Epsilon)),
+        depth: len(config.Seeds),
+        seeds: config.Seeds,  // 共通シードを使用
+    }
+    // ...
+    return cms
 }
 ```
 
