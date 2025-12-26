@@ -52,8 +52,14 @@ s^2 &= \frac{M_2}{n-1} \quad \text{（標本分散、不偏分散）}
 $$
 
 ここで：
-- $M_2$ は二乗偏差の合計（sum of squared differences）
-- $(x_n - \mu_{n-1})$ と $(x_n - \mu_n)$ の両方を使うことで数値的安定性を確保
+- $\mu_n$: $n$ 個目までのデータの平均
+- $\mu_{n-1}$: $n-1$ 個目までのデータの平均
+- $x_n$: 新しく追加するデータ
+- $M_2$: 二乗偏差の合計（sum of squared differences）= $\sum_{i=1}^{n}(x_i - \mu_n)^2$
+- $\sigma^2$: 母分散（population variance）
+- $s^2$: 標本分散（sample variance、不偏分散）
+
+> **ポイント**: $(x_n - \mu_{n-1})$ と $(x_n - \mu_n)$ の両方を使うことで数値的安定性を確保しています。
 
 ## 実装例（Go）
 
@@ -126,6 +132,13 @@ $$
 M_{2,combined} &= M_{2,A} + M_{2,B} + \delta^2 \cdot \frac{n_A \cdot n_B}{n_A + n_B}
 \end{aligned}
 $$
+
+ここで：
+- $\delta$: 2つのノード間の平均の差
+- $n_A, n_B$: 各ノードのデータ数
+- $\mu_A, \mu_B$: 各ノードの平均
+- $M_{2,A}, M_{2,B}$: 各ノードの二乗偏差の合計
+- $M_{2,combined}$: マージ後の二乗偏差の合計
 
 ```go
 // Merge は2つのWelfordVarianceをマージ

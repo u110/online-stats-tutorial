@@ -95,7 +95,13 @@ M_{2,combined} &= M_{2,A} + M_{2,B} + \delta^2 \cdot \frac{n_A \cdot n_B}{n_{com
 \end{aligned}
 $$
 
-ここで $M_2$ は二乗偏差の合計です。分散は $\sigma^2 = \frac{M_2}{n}$ で得られます。
+ここで：
+- $\delta$: 2つのノード間の平均の差
+- $n_A, n_B$: 各ノードのデータ数
+- $\mu_A, \mu_B$: 各ノードの平均
+- $M_{2,A}, M_{2,B}$: 各ノードの二乗偏差の合計
+- $M_2 = \sum_{i=1}^{n}(x_i - \mu)^2$（二乗偏差の合計）
+- 分散は $\sigma^2 = \frac{M_2}{n}$ で得られます
 
 ```go
 // Stats は統計情報を保持

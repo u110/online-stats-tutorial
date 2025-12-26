@@ -81,6 +81,11 @@ func (m *OnlineMean) Count() int64 {
 
 $$\mu_{combined} = \frac{n_A \cdot \mu_A + n_B \cdot \mu_B}{n_A + n_B}$$
 
+ここで：
+- $\mu_{combined}$: マージ後の平均
+- $n_A, n_B$: 各ノードのデータ数
+- $\mu_A, \mu_B$: 各ノードの平均
+
 ```go
 // Merge は2つのOnlineMeanをマージ
 func Merge(a, b *OnlineMean) *OnlineMean {
